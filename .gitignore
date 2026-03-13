@@ -1,0 +1,6 @@
+gitlab-source/
+gitlab-docs/
+__pycache__/
+*.pyc
+.claude/logs/
+.claude/recovery/
