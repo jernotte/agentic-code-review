@@ -1,0 +1,42 @@
+# Taint Hunter Agent Configuration
+name: taint-hunter
+skill: agents/skills/taint_hunter.md
+knowledge_pack: knowledge/packs/taint/
+
+tools:
+  - semgrep
+  # - brakeman  # Requires Ruby runtime (not currently available)
+
+escalation_sources:
+  - "CheckSQL"
+  - "CheckCrossSiteScripting"
+  - "CheckExecute"
+  - "CheckSend"
+  - "CheckRedirect"
+  - "sql-injection"
+  - "xss"
+  - "html_safe"
+  - "command-injection"
+  - "ssrf"
+
+vuln_classes:
+  - sqli
+  - xss
+  - command_injection
+  - ssrf
+
+output_dir: memory/findings/candidates/
+
+memory:
+  hunt_state: memory/hunt_state/
+  findings: memory/findings/
+
+scanner_config:
+  semgrep_rulesets:
+    - "r/ruby.rails.security"
+    - "r/ruby.lang.security"
+  exclude_paths:
+    - "spec/"
+    - "test/"
+    - "vendor/"
+    - "db/migrate/"

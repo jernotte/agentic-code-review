@@ -1,0 +1,40 @@
+# Escalation Rules — maps scanner detections to specialist agents
+# Phase 1: all injection detections route to taint-hunter
+
+rules:
+  - detection: "CheckSQL|sql-injection|sqli|SQL"
+    agent: taint-hunter
+    mode: hunting
+    vuln_class: sqli
+    note: "Trace taint path from source to SQL sink"
+
+  - detection: "CheckCrossSiteScripting|xss|html_safe|raw|cross-site-scripting"
+    agent: taint-hunter
+    mode: hunting
+    vuln_class: xss
+    note: "Trace taint path to rendering sink — html_safe alone is not a finding"
+
+  - detection: "CheckExecute|command-injection|system|exec|command_injection"
+    agent: taint-hunter
+    mode: hunting
+    vuln_class: command_injection
+    note: "Trace taint path from user input to system/exec call"
+
+  - detection: "CheckRedirect|ssrf|server-side-request-forgery|open-redirect"
+    agent: taint-hunter
+    mode: hunting
+    vuln_class: ssrf
+    note: "Trace taint path from user input to HTTP request"
+
+  # Phase 2+ agents
+  - detection: "missing-authorization|idor|insecure-direct-object"
+    agent: auth-hunter
+    mode: hunting
+    vuln_class: idor
+    note: "Phase 2 — check DeclarativePolicy"
+
+  - detection: "known-cve-pattern|variant-match"
+    agent: variant-hunter
+    mode: variant
+    vuln_class: from_seed
+    note: "Phase 3 — seed with matching CVE"

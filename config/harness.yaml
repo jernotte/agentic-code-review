@@ -1,0 +1,40 @@
+# Harness Configuration — Phase 1
+
+gitlab:
+  source_path: "gitlab-source/"
+  version: "17.x"
+
+scanners:
+  semgrep:
+    enabled: true
+    rulesets:
+      - "p/ruby"
+      - "p/rails"
+    timeout: 300
+  brakeman:
+    enabled: false  # Ruby runtime not available
+    timeout: 600
+
+triage:
+  exclude_paths:
+    - "spec/"
+    - "test/"
+    - "vendor/"
+    - "db/migrate/"
+    - "node_modules/"
+  min_severity: "WARNING"
+
+agents:
+  taint-hunter:
+    skill: "agents/skills/taint_hunter.md"
+    knowledge_pack: "knowledge/packs/taint/"
+    config: "agents/configs/taint.yaml"
+
+memory:
+  hunt_state: "memory/hunt_state/"
+  findings: "memory/findings/"
+  targets: "memory/targets/gitlab/"
+
+evaluation:
+  ground_truth: "evaluation/ground_truth/gitlab_known_vulns.jsonl"
+  metrics_output: "evaluation/metrics_report.md"
